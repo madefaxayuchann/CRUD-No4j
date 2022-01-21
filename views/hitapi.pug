@@ -1,0 +1,90 @@
+extends layout
+block content
+  // Start: Mobile Nav
+  -
+    console.log('Haiii=======')
+    function formatNumber(x){
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    }
+  .tablet.mobile.only.row
+    a.header.item My App
+    .right.menu
+      a.menu.item
+        .ui.basic.icon.toggle.button
+          i.content.icon
+    .ui.vertical.accordion.borderless.fluid.menu
+      .item
+        .title
+          | Dropdown
+          i.dropdown.icon
+
+  .ui.container
+    .ui.grid 
+      .sixteen.wide.column
+        h1.ui.huge.header
+          | Navbar example
+      .ui.top.attached.tabular.menu
+        .active.item Tab
+      .ui.bottom.attached.active.tab.segment
+        .ui.hidden.divider
+        table#mytable.ui.celled.table
+          thead
+            tr
+              th  Country
+              th  Confirmed
+              th  Death
+              th  Recovered
+              th  Active
+              
+               
+               
+          tbody
+           each item, index in data
+            tr
+              td= item.attributes.Country_Region
+              td #{formatNumber(item.attributes.Confirmed)}
+              td #{formatNumber(item.attributes.Deaths)}  
+              td= - item.attributes.Recovered 
+              td= - item.attributes.Active            
+
+           
+  script.
+    $(document).ready(function () {
+      $("#mytable").DataTable();
+      getAPI()
+      //- const value = parseInt($('#death').val())
+      //- $("#death").val(value);
+      //- console.log(value)
+    });
+
+
+    //- function getData(){
+    //-   $.ajax({
+    //-     type: "GET",
+    //-     url: "/API/data",
+    //-     dataType: "json",
+    //-     success: function (i) {
+    //-       return i
+    //-     }
+    //-   })
+    //- }
+
+    function getAPI(){
+      $.ajax({
+        type: "GET",
+        url: "/",
+        dataType: "json",
+        success: async function (i) {
+          //- $('#na').text(i.attributes.Country_Region)
+          //- $('#ng').text(i.attributes.Confirmed)
+          //- $('#ny').text(i.attributes.Deaths)
+          //- $('#nt').text(i.attributes.Active)
+          //- const data = await getData()
+          //- console.log(data)
+        }
+      })
+    }
+
+    
+        

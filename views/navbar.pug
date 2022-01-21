@@ -1,0 +1,54 @@
+.ui.fixed.borderless.huge.menu
+  .ui.container.grid
+    // Start: Desktop Nav
+    .computer.only.row
+      a.header.item(href="/") Myapp
+      a.ui.dropdown.item
+        | Dropdown
+        i.dropdown.icon
+      // Start: Popup
+      .ui.fluid.popup.bottom.left.transition.hidden(
+        style="top: 553px; left: 1px; bottom: auto; right: auto; width: 657px"
+      )
+        .ui.four.column.relaxed.divided.grid
+          .column
+            h4.ui.header Fabrics
+            .ui.link.list
+              a.item(href="/table") Table
+          .column
+            h4.ui.header Creat Read Update Data
+            .ui.link.list
+              a.item(href="/crud") CRUD
+          .column
+            h4.ui.header API
+            .ui.link.list
+              a.item(href="/API") Crud Api
+          .column
+            h4.ui.header Functional Global
+            .ui.link.list
+              a.item(href="/fg") Functional Global
+          .column
+            h4.ui.header New Table
+            .ui.link.list
+              a.item(href="/ats") New
+          
+
+    script.
+      $(document).ready(function () {
+        $(".computer.only .dropdown.item").popup({
+          inline: true,
+          hoverable: true,
+          position: "bottom left",
+          delay: {
+            show: 300,
+            hide: 800,
+          },
+        });
+        $(".ui.dropdown").dropdown();
+        $(".ui.accordion").accordion();
+
+        // bind "hide and show vertical menu" event to top right icon button
+        $(".ui.toggle.button").click(function () {
+          $(".ui.vertical.menu").toggle("250", "linear");
+        });
+      });

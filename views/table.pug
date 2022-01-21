@@ -1,0 +1,206 @@
+extends layout
+block content
+  // Start: Mobile Nav
+  .tablet.mobile.only.row
+    a.header.item My App
+    .right.menu
+      a.menu.item
+        .ui.basic.icon.toggle.button
+          i.content.icon
+    .ui.vertical.accordion.borderless.fluid.menu
+      .item
+        .title
+          | Dropdown
+          i.dropdown.icon
+
+  .ui.container
+    .ui.grid 
+      .sixteen.wide.column
+        h1.ui.huge.header
+          | Navbar example
+        .right.menu
+          button#test.ui.button.yellow.create_btn(type="button") Create
+        .ui.hidden.divider
+
+        table#example.ui.fixed.single.line.celled.table
+          thead
+            tr
+              th Name
+              th Email
+              th Action
+          tbody.dataUser
+            each item, index in data
+              tr
+                td= item.name
+                td= item.email
+                td
+                  button.ui.red.button(
+                    onclick=`deleteItems(${item.id})`,
+                    class="btnDl-" + item.id,
+                    value=index
+                  ) Delete
+                  button.ui.grey.button(
+                    onclick=`editDataItems({id: ${item.id}, name: "${item.name}", email: "${item.email}"})`,
+                    class="btnEd-" + item.id,
+                    value=index
+                  ) Edit
+
+  .ui.modal.edit
+    .header Edit User
+    .content
+      .ui.form.segment
+        .field
+          label Name
+          input#nameValEdit(
+            type="text",
+            name="name",
+            placeholder="Enter name .."
+          )
+        .field
+          label Email
+          input#emailValEdit(
+            type="text",
+            name="email",
+            placeholder="Enter The Rating .."
+          )
+        //- button#cancel.ui.red.right.floated.cancel.button Cancel
+      button#submitEdit.ui.button.teal Sumbit
+        //- .ui.active.centered.inline.loader
+
+  .ui.modal.test
+    .header Add User
+    .content
+      .ui.form.segment
+        .field
+          label Name
+          input#nameVal(type="text", name="name", placeholder="Enter name ..")
+        .field
+          label Email
+          input#emailVal(
+            type="text",
+            name="email",
+            placeholder="Enter The Rating .."
+          )
+        //- button#cancel.ui.red.right.floated.cancel.button Cancel
+      button#submit.ui.button.teal Sumbit
+        //- .ui.active.centered.inline.loader
+  script.
+    $(document).ready(function () {
+      $("#example").DataTable();
+    });
+
+    $("#submit").click(function () {
+      notif();
+    });
+
+    function editDataItems(x) {
+      $("#nameValEdit").val(x.name);
+      $("#emailValEdit").val(x.email);
+      $(".edit").modal("show");
+      $(".edit").modal({
+        closable: true,
+      });
+      $("#submitEdit").click(function () {
+        const name = $("#nameValEdit").val();
+        const email = $("#emailValEdit").val();
+        $.ajax({
+          type: "GET",
+          url: "/edit",
+          dataType: "json",
+          data: {
+            id: x.id,
+            name: name,
+            email: email,
+          },
+          success: function (msg) {
+            if (msg) {
+              $(".ui.modal.edit").modal("hide");
+              window.location.reload();
+              editNotification();
+            }
+          },
+        });
+      });
+    }
+
+    function deleteItems(e) {
+      console.log(e);
+      $.ajax({
+        type: "GET",
+        url: "/delete",
+        dataType: "json",
+        data: {
+          id: e,
+        },
+        success: function (msg) {
+          if (msg) {
+            deleteNotification();
+            window.location.reload();
+          }
+        },
+      });
+    }
+
+    function notif() {
+      const name = $("#nameVal").val();
+      const email = $("#emailVal").val();
+      $.ajax({
+        type: "GET",
+        url: "/createData",
+        dataType: "json",
+        data: {
+          name: name,
+          email: email,
+        },
+        success: function (msg) {
+          $(".ui.modal.test").modal("hide");
+          location.reload();
+          addInfoNotification();
+        },
+      });
+    }
+
+    function addInfoNotification() {
+      $.uiAlert({
+        textHead: "Data Berhasil Ditambahkan", // header
+        text: "Horaiiiii", // Text
+        bgcolor: "#FBBD08", // background-color
+        textcolor: "#fff", // color
+        position: "top-left", // position . top And bottom ||  left / center / right
+        icon: "checkmark box", // icon in semantic-UI
+        time: 3, // time
+      });
+    }
+
+    function deleteNotification() {
+      $.uiAlert({
+        textHead: "Data Berhasil Dihapus", // header
+        text: "Horaiiiii", // Text
+        bgcolor: "#19c3aa", // background-color
+        textcolor: "#fff", // color
+        position: "top-left", // position . top And bottom ||  left / center / right
+        icon: "checkmark box", // icon in semantic-UI
+        time: 3, // time
+      });
+    }
+
+    function editNotification() {
+      $.uiAlert({
+        textHead: "Data Berhasil Diedit", // header
+        text: "Horaiiiii", // Text
+        bgcolor: "#A9A9A9", // background-color
+        textcolor: "#fff", // color
+        position: "top-left", // position . top And bottom ||  left / center / right
+        icon: "checkmark box", // icon in semantic-UI
+        time: 3, // time
+      });
+    }
+
+    $(function () {
+      $("#test").click(function () {
+        $(".test").modal("show");
+      });
+      $(".test").modal({
+        closable: true,
+      });
+    });

@@ -1,0 +1,175 @@
+extends layout
+block content
+  // Start: Mobile Nav
+  .tablet.mobile.only.row
+    a.header.item My App
+    .right.menu
+      a.menu.item
+        .ui.basic.icon.toggle.button
+          i.content.icon
+    .ui.vertical.accordion.borderless.fluid.menu
+      .item
+        .title
+          | Dropdown
+          i.dropdown.icon
+
+  .ui.container
+    .ui.grid 
+      .sixteen.wide.column
+        h1.ui.huge.header
+          | Navbar example
+        .ui.hidden.divider
+
+        .ui.styled.fluid.accordion
+          .title
+            i.window.minimize.icon
+          .content
+            button#add.ui.blue.button Add  
+              i.plus.square.outline.icon
+
+            .ui.hidden.divider
+            table#mytable.ui.celled.table
+              thead
+                tr
+                  th Penulis
+                  th Pengarang
+                  th Action
+              tbody
+                each item, index in data
+                  tr
+                    td= item.name
+                    td= item.penulis
+                    td
+                      button.ui.red.button(
+                        onclick=`deleteItems(${item.id})`,
+                        class="btnDl-" + item.id,
+                        value=index
+                      ) Delete
+
+                      button.ui.grey.button(
+                        onclick=`editDataItems({id: ${item.id}, name: "${item.name}", penulis: "${item.penulis}"})`,
+                        class="btnEd-" + item.id,
+                        value=index
+                      ) Edit
+
+  .ui.modal.edit
+    .header Edit User
+    .content
+      .ui.form.segment
+        .field
+          label Name
+          input#nameValEdit(
+            type="text",
+            name="name",
+            placeholder="Enter name .."
+          )
+        .field
+          label Penulis
+          input#penulisValEdit(
+            type="text",
+            name="penulis",
+            placeholder="Enter The Rating .."
+          )
+        //- button#cancel.ui.red.right.floated.cancel.button Cancel
+      button#submitEdit.ui.button.teal Sumbit
+        //- .ui.active.centered.inline.loader
+
+  .ui.modal.test
+    .header Add User
+    .content
+      .ui.form.segment
+        .field
+          label Name
+          input#nameVal(type="text", name="name", placeholder="Enter name ..")
+        .field
+          label Penulis
+          input#penulisVal(
+            type="text",
+            name="penulis",
+            placeholder="Enter The Rating .."
+          )
+      button#submit.ui.button.teal Sumbit
+
+  script.
+    $(document).ready(function () {
+      $("#mytable").DataTable();
+    });
+
+    $("#submit").click(function () {
+      notif();
+    });
+
+    function notif() {
+      const name = $("#nameVal").val();
+      const penulis = $("#penulisVal").val();
+      $.ajax({
+        type: "GET",
+        url: "/crud/createData",
+        dataType: "json",
+        data: {
+          name: name,
+          penulis: penulis,
+        },
+        success: function (msg) {          
+          if (msg) {
+            $(".ui.modal.test").modal("hide");
+            window.location.reload();
+          }
+        },
+      });
+    }
+
+    function editDataItems(x) {
+      $("#nameValEdit").val(x.name);
+      $("#penulisValEdit").val(x.penulis);
+      $(".edit").modal("show");
+      $(".edit").modal({
+        closable: true,
+      });
+      $("#submitEdit").click(function () {
+        const name = $("#nameValEdit").val();
+        const penulis = $("#penulisValEdit").val();
+        $.ajax({
+          type: "GET",
+          url: "/crud/edit",
+          dataType: "json",
+          data: {
+            id: x.id,
+            name: name,
+            penulis: penulis,
+          },
+          success: function (msg) {
+            if (msg) {
+              $(".ui.modal.edit").modal("hide");
+              window.location.reload();
+            }
+          },
+        });
+      });
+    }
+
+    function deleteItems(e) {
+      console.log(e);
+      $.ajax({
+        type: "GET",
+        url: "/crud/delete",
+        dataType: "json",
+        data: {
+          id: e,
+        },
+        success: function (msg) {
+          if (msg) {
+            window.location.reload();
+          }
+        },
+      });
+    }
+
+    $(function () {
+      $("#add").click(function () {
+        $(".test").modal("show");
+      });
+      $(".test").modal({
+        closable: true,
+      });
+    });

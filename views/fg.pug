@@ -1,0 +1,93 @@
+extends layout
+block content 
+  .tablet.mobile.only.row
+  a.header.item My App
+  .right.menu
+    a.menu.item
+      .ui.basic.icon.toggle.button
+        i.content.icon
+  .ui.vertical.accordion.borderless.fluid.menu
+    .item
+      .title
+        | Dropdown
+        i.dropdown.icon
+  
+  .ui.container
+    .ui.grid 
+      .sixteen.wide.column
+        h1.ui.huge.header
+          | This is Function Global
+      .ui.top.attached.tabular.menu
+        .active.item Tab
+      .ui.bottom.attached.active.tab.segment
+        h1 Tap Here
+        .ui.hidden.divider
+        table#mytable.ui.celled.table
+          thead
+            tr
+              th  Country
+              th  Confirmed
+              th  Death
+              th  Recovered
+              th  Active
+          tbody#tablebody
+            //- tr
+            //-   td#country
+            //-   td#confirmed
+            //-   td#death
+            //-   td#recovered
+            //-   td#active
+
+  script.
+    function formatNumber(x){
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    let reqData = {
+     method : "GET",
+     params: {
+       name: 'niken'
+     }
+    }    
+    data = []
+    requestData('/fg/data', reqData, function(resp){
+
+      resp.forEach(items => {
+        const confirmed = formatNumber(items.attributes.Confirmed)
+        const death = formatNumber(items.attributes.Deaths)
+          data.push([
+            items.attributes.Country_Region,
+            confirmed,
+            death,
+            items.attributes.Recovered,
+            items.attributes.Active,
+          ])
+        console.log(data)
+        
+
+        //- $('#country').text(items.attributes.Country_Region)
+        //- $('#confirmed').text(formatNumber(items.attributes.Confirmed))
+        //- $('#death').text(formatNumber(items.attributes.Deaths))
+        //- $('#recovered').text(items.attributes.Recovered)
+        //- $('#active').text(items.attributes.Active)
+        //- result.push(items);
+      })
+      $('#mytable').DataTable( {
+            data: data
+        } )
+      //- console.log(resp)
+    })
+
+    //- result.forEach(items => {
+    //-   $('#country').text(items.attributes.Country_Region)
+    //-   $('#confirmed').text(items.attributes.Country_Region)
+    //-   $('#death').text(items.attributes.Country_Region)
+    //-   $('#recovered').text(items.attributes.Country_Region)
+    //-   $('#active').text(items.attributes.Country_Region)
+    //- })
+    
+
+
+    
+
+    

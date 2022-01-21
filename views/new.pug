@@ -1,0 +1,23 @@
+extends layout
+block content
+  // Start: Mobile Nav
+  .tablet.mobile.only.row
+    a.header.item My App
+    .right.menu
+      a.menu.item
+        .ui.basic.icon.toggle.button
+          i.content.icon
+    .ui.vertical.accordion.borderless.fluid.menu
+      .item
+        .title
+          | Dropdown
+          i.dropdown.icon
+
+  .ui.container
+    .ui.grid 
+      .sixteen.wide.column
+        h1.ui.huge.header
+          | Navbar example
+        .right.menu
+          button#test.ui.button.yellow.create_btn(type="button") Create
+        .ui.hidden.divider
